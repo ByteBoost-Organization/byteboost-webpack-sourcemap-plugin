@@ -1,0 +1,30 @@
+{
+  "name": "sourcemap-plugin",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "del ./dist",
+    "build": "npm run clean && tsc",
+    "patch": "npm run build && npm version patch && npm publish && git push",
+    "minor": "npm run build && npm version minor && npm publish && git push",
+    "major": "npm run build && npm version major && npm publish && git push",
+    "prerelease": "npm run build && npm version prerelease --preid=alpha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "del-cli": "^5.1.0",
+    "prettier": "^3.2.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.5",
+    "webpack": "^5.91.0"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "mime": "^4.0.1",
+    "node-fetch": "^3.3.2"
+  }
+}
