@@ -1,14 +1,14 @@
-import { existsSync, readFileSync } from 'fs';
-import mime from 'mime';
+import { UploadSourceMapsHandler } from '@byteboost/cli/sdk';
+import { readFileSync } from 'fs';
 import path from 'path';
-import Webpack from 'webpack';
+import type Webpack from 'webpack';
 
 export interface OptionsInterface {
   organization: string;
   domain: string;
   token: string;
   logging?: boolean;
-  // versionFromPackageJSON?: boolean;
+  versionFromPackageJSON?: boolean;
   version?: string;
   debug?: boolean;
 }
@@ -21,8 +21,6 @@ export class ByteboostSourcemaps {
     logging: false,
     debug: false,
   };
-
-  // private version = '';
 
   public options: Partial<OptionsInterface> = {};
 
@@ -41,16 +39,14 @@ export class ByteboostSourcemaps {
       throw new Error('domain is required');
     }
 
-    // if (!options.versionFromPackageJSON && !options.version) {
-    //   throw new Error('Either packageJSONVersion or version is required');
-    // }
-
-    // if (options.versionFromPackageJSON && options.version) {
-    //   throw new Error('Only one of packageJSONVersion or version is allowed');
-    // }
-
-    if (!options.version) {
+    if (!options.version && !options.versionFromPackageJSON) {
       throw new Error('version is required');
+    }
+
+    if (options.version && options.versionFromPackageJSON) {
+      throw new Error(
+        'version and versionFromPackageJSON cannot be used together',
+      );
     }
 
     if (options.debug) {
@@ -60,99 +56,80 @@ export class ByteboostSourcemaps {
     this.options = { ...ByteboostSourcemaps.defaultOptions, ...options };
   }
 
-  private getFilePathAsBlob(filePath: string) {
+  private parseJSON(content: string) {
     try {
-      const content = readFileSync(filePath, {
-        encoding: 'utf-8',
-      });
-
-      return new Blob([content], {
-        type: mime.getType(filePath) ?? undefined,
-      });
-    } catch (err: any) {
-      throw err;
+      return JSON.parse(content);
+    } catch (e: any) {
+      return null;
     }
   }
 
-  private handleUpload = (stats: Webpack.Stats) => {
-    if (!this.compiler) {
-      throw new Error('Compiler not found');
+  private getVersion() {
+    if (this.options.version) {
+      return this.options.version;
     }
 
-    stats.compilation.chunks.forEach((chunk) => {
-      chunk.files.forEach(async (file) => {
-        const codePath = path.join(this.compiler?.options.output.path!, file);
-        const sourcemapPath = path.join(
-          this.compiler?.options.output.path!,
-          `${file}.map`,
-        );
+    try {
+      const packageJSONContent = readFileSync(
+        `${this.compiler?.context || ''}/package.json`,
+        'utf-8',
+      );
 
-        if (!existsSync(codePath)) {
-          this.warn(`Code file not found: ${codePath}`);
-          return;
-        }
+      const packageJSON = this.parseJSON(packageJSONContent);
 
-        if (!existsSync(sourcemapPath)) {
-          this.warn(`Sourcemap file not found: ${sourcemapPath}`);
-          return;
-        }
+      if (!packageJSON) {
+        throw new Error('Couldnt parse package.json');
+      }
 
-        const form = new FormData();
+      return packageJSON.version;
+    } catch (e: any) {
+      throw new Error(e.message);
+    }
+  }
 
-        form.append('files', this.getFilePathAsBlob(codePath), file);
-
-        form.append(
-          'files',
-          this.getFilePathAsBlob(sourcemapPath),
-          `${file}.map`,
-        );
-
-        form.append('domain', this.options.domain!);
-        form.append('organization', this.options.organization!);
-        form.append('version', this.options.version!);
-
-        const res = await fetch(
-          `https://dev.external.api.byteboost.io/v1beta/public/sourcemaps`,
-          {
-            method: 'POST',
-            headers: {
-              'x-auth-token': this.options.token!,
-            },
-            body: form,
-          },
-        );
-
-        if (res.status !== 201) {
-          try {
-            const data = (await res.json()) as any;
-            throw new Error(data.errors[0].message);
-          } catch (err: any) {
-            this.error(`Failed to upload sourcemap: ${sourcemapPath}`);
-          }
-        } else {
-          this.log(`Uploaded sourcemap: ${sourcemapPath}`);
-        }
-
-        return true;
-      });
-    });
-  };
-
-  apply(compiler: Webpack.Compiler) {
+  async apply(compiler: Webpack.Compiler) {
     this.compiler = compiler;
 
-    compiler.hooks.afterDone.tap('ByteboostSourcemaps', this.handleUpload);
+    const handler = new UploadSourceMapsHandler(compiler.context);
+
+    const isValidJsDir = handler.isPathValidJsDirectory();
+
+    if (!isValidJsDir) {
+      this.warn(
+        `The path ${path} is not a valid JS project directory. Couldn't find package.json`,
+      );
+      return;
+    }
+
+    handler.version = this.getVersion();
+
+    this.log(`Tagging source maps with version ${handler.version}`);
+
+    handler.env = {
+      BYTEBOOST_ORGANIZATION: this.options.organization,
+      BYTEBOOST_DOMAIN: this.options.domain,
+      BYTEBOOST_TOKEN: this.options.token,
+    };
+
+    compiler.hooks.afterDone.tap('ByteboostSourcemap', async () => {
+      handler.compileSourceMapPathsList();
+
+      if (!handler.mapFilePaths[0]) {
+        this.warn(`No sourcemaps found in ${handler.fullpath}`);
+        return;
+      }
+
+      await handler.tagFilesWithDebugInfo();
+
+      await handler.uploadSourcemaps();
+
+      this.log(`Uploaded sourcemaps.`);
+    });
   }
 
   private log(message: string) {
     if (this.options.logging) {
       console.log(`[INFO]: ${message}`);
-    }
-  }
-
-  private error(message: string) {
-    if (this.options.logging) {
-      console.error(`[ERROR]: ${message}`);
     }
   }
 

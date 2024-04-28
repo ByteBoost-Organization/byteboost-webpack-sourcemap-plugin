@@ -35,9 +35,8 @@
     "webpack": "^5.91.0"
   },
   "dependencies": {
-    "form-data": "^4.0.0",
+    "@byteboost/cli": "^0.0.1-prerelease.9",
     "mime": "^4.0.1",
-    "nanoid": "^5.0.7",
-    "node-fetch": "^3.3.2"
+    "nanoid": "^5.0.7"
   }
 }
