@@ -11,6 +11,7 @@ export interface OptionsInterface {
   versionFromPackageJSON?: boolean;
   version?: string;
   debug?: boolean;
+  cleanupSourceMaps?: boolean;
 }
 
 export class ByteboostSourcemaps {
@@ -20,6 +21,7 @@ export class ByteboostSourcemaps {
     token: '',
     logging: false,
     debug: false,
+    cleanupSourceMaps: true,
   };
 
   public options: Partial<OptionsInterface> = {};
@@ -122,6 +124,12 @@ export class ByteboostSourcemaps {
       await handler.tagFilesWithDebugInfo();
 
       await handler.uploadSourcemaps();
+
+      if (this.options.cleanupSourceMaps) {
+        handler.cleanupSourceMaps();
+
+        this.log('Sourcemaps cleaned up');
+      }
 
       this.log(`Uploaded sourcemaps.`);
     });
