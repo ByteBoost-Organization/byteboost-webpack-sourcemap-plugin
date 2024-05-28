@@ -30,24 +30,24 @@ export class ByteboostSourcemaps {
 
   constructor(options: Partial<OptionsInterface> = {}) {
     if (!options.token) {
-      throw new Error('token is required');
+      throw new Error('[Byteboost] token is required');
     }
 
     if (!options.organization) {
-      throw new Error('organization is required');
+      throw new Error('[Byteboost] organization is required');
     }
 
     if (!options.domain) {
-      throw new Error('domain is required');
+      throw new Error('[Byteboost] domain is required');
     }
 
     if (!options.version && !options.versionFromPackageJSON) {
-      throw new Error('version is required');
+      throw new Error('[Byteboost] version is required');
     }
 
     if (options.version && options.versionFromPackageJSON) {
       throw new Error(
-        'version and versionFromPackageJSON cannot be used together',
+        '[Byteboost] version and versionFromPackageJSON cannot be used together',
       );
     }
 
@@ -80,7 +80,7 @@ export class ByteboostSourcemaps {
       const packageJSON = this.parseJSON(packageJSONContent);
 
       if (!packageJSON) {
-        throw new Error('Couldnt parse package.json');
+        throw new Error('[Byteboost] Couldnt parse package.json');
       }
 
       return packageJSON.version;
@@ -137,13 +137,13 @@ export class ByteboostSourcemaps {
 
   private log(message: string) {
     if (this.options.logging) {
-      console.log(`[INFO]: ${message}`);
+      console.log(`[Byteboost][INFO]: ${message}`);
     }
   }
 
   private warn(message: string) {
     if (this.options.logging) {
-      console.warn(`[WARN]: ${message}`);
+      console.warn(`[Byteboost][WARN]: ${message}`);
     }
   }
 }
