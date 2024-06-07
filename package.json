@@ -1,15 +1,27 @@
 {
-  "name": "sourcemap-plugin",
+  "name": "@byteboost/webpack-plugin",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "engines": {
+    "node": ">=16"
+  },
+  "repository": {
+    "url": "https://github.com/ByteBoost-Organization/byteboost-webpack-sourcemap-plugin",
+    "type": "github"
+  },
+  "private": false,
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "clean": "del ./dist",
     "build": "npm run clean && tsc",
     "patch": "npm run build && npm version patch && npm publish && git push",
     "minor": "npm run build && npm version minor && npm publish && git push",
     "major": "npm run build && npm version major && npm publish && git push",
-    "prerelease": "npm run build && npm version prerelease --preid=alpha"
+    "prerelease": "npm run clean && npm run build && npm version prerelease --preid=prerelease && npm publish && git push"
   },
   "keywords": [],
   "author": "",
@@ -23,8 +35,8 @@
     "webpack": "^5.91.0"
   },
   "dependencies": {
-    "form-data": "^4.0.0",
+    "@byteboost/cli": "0.0.1-prerelease.12",
     "mime": "^4.0.1",
-    "node-fetch": "^3.3.2"
+    "nanoid": "^5.0.7"
   }
 }
