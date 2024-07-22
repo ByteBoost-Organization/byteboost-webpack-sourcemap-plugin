@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "clean": "del ./dist",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc && npm run rollup",
     "patch": "npm run build && npm version patch && npm publish && git push",
     "minor": "npm run build && npm version minor && npm publish && git push",
     "major": "npm run build && npm version major && npm publish && git push",
