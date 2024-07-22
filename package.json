@@ -3,7 +3,10 @@
   "version": "0.0.3",
   "description": "",
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs"
+  },
   "engines": {
     "node": ">=16"
   },
@@ -17,11 +20,12 @@
   ],
   "scripts": {
     "clean": "del ./dist",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc && npm run rollup",
     "patch": "npm run build && npm version patch && npm publish && git push",
     "minor": "npm run build && npm version minor && npm publish && git push",
     "major": "npm run build && npm version major && npm publish && git push",
-    "prerelease": "npm run clean && npm run build && npm version prerelease --preid=prerelease && npm publish && git push"
+    "prerelease": "npm run clean && npm run build && npm version prerelease --preid=prerelease && npm publish && git push",
+    "rollup": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +34,7 @@
     "@types/node": "^20.12.7",
     "del-cli": "^5.1.0",
     "prettier": "^3.2.5",
+    "rollup": "^4.19.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
     "webpack": "^5.91.0"
