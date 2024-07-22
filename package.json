@@ -1,6 +1,6 @@
 {
   "name": "@byteboost/webpack-plugin",
-  "version": "0.0.6",
+  "version": "0.0.5",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -16,6 +16,9 @@
     "type": "github"
   },
   "private": false,
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
     "clean": "del ./dist",
     "build": "npm run clean && tsc && npm run rollup",
