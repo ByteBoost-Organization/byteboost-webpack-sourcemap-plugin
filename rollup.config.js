@@ -6,9 +6,11 @@ import typescript from '@rollup/plugin-typescript';
 export default {
   input: './dist/index.js',
   output: {
-    file: './dist/index.cjs',
+    dir: 'dist/',
     format: 'cjs',
-    inlineDynamicImports: true, // Inlines dynamic imports if you prefer a single output file
+    entryFileNames: '[name].cjs',
+    // inlineDynamicImports: true, // Inlines dynamic imports if you prefer a single output file
+    preserveModules: true,
   },
-  plugins: [nodeResolve(), commonjs(), json(), typescript()],
+  // plugins: [nodeResolve(), commonjs(), json(), typescript()],
 };

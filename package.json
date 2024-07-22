@@ -27,8 +27,8 @@
     "minor": "npm run build && npm version minor && npm publish && git push",
     "major": "npm run build && npm version major && npm publish && git push",
     "prerelease": "npm run clean && npm run build && npm version prerelease --preid=prerelease && npm publish && git push",
-    "rollup": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
-    "testBuild": "rollup --config rollup.config.js"
+    "testBuild": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
+    "rollup": "rollup --config rollup.config.js"
   },
   "keywords": [],
   "author": "",
@@ -47,7 +47,7 @@
     "webpack": "^5.91.0"
   },
   "dependencies": {
-    "@byteboost/cli": "1.0.1-dev.2",
+    "@byteboost/cli": "1.0.1-dev.3",
     "mime": "^4.0.1",
     "nanoid": "^5.0.7"
   }
