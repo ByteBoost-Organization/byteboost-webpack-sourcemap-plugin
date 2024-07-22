@@ -3,6 +3,8 @@
   "version": "0.0.9-dev.1",
   "description": "",
   "type": "module",
+  "module": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -28,7 +30,8 @@
     "minor": "npm run build && npm version minor && npm publish && git push",
     "major": "npm run build && npm version major && npm publish && git push",
     "prerelease": "npm run clean && npm run build && npm version prerelease --preid=prerelease && npm publish && git push",
-    "rollup": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs"
+    "rollup": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs",
+    "testBuild": "rollup --config rollup.config.js"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +40,7 @@
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^20.12.7",
     "del-cli": "^5.1.0",
     "prettier": "^3.2.5",
