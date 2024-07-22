@@ -3,10 +3,12 @@
   "version": "0.0.9-dev.0",
   "description": "",
   "type": "module",
-  "main": "./dist/index.js",
   "exports": {
-    "import": "./dist/index.js",
-    "require": "./dist/index.cjs"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "engines": {
     "node": ">=16"
@@ -26,7 +28,7 @@
     "minor": "npm run build && npm version minor && npm publish && git push",
     "major": "npm run build && npm version major && npm publish && git push",
     "prerelease": "npm run clean && npm run build && npm version prerelease --preid=prerelease && npm publish && git push",
-    "rollup": "rollup --config rollup.config.js"
+    "rollup": "rollup ./dist/index.js --file ./dist/index.cjs --format cjs"
   },
   "keywords": [],
   "author": "",
