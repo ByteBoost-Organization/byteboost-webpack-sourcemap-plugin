@@ -22,7 +22,7 @@
   ],
   "scripts": {
     "clean": "del ./dist",
-    "build": "npm run clean && tsc && npm run rollup",
+    "build": "npm run clean && tsc",
     "patch": "npm run build && npm version patch && npm publish && git push",
     "minor": "npm run build && npm version minor && npm publish && git push",
     "major": "npm run build && npm version major && npm publish && git push",
@@ -47,7 +47,7 @@
     "webpack": "^5.91.0"
   },
   "dependencies": {
-    "@byteboost/cli": "^1.0.0",
+    "@byteboost/cli": "1.0.1-dev.2",
     "mime": "^4.0.1",
     "nanoid": "^5.0.7"
   }
