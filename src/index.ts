@@ -29,6 +29,8 @@ export class ByteboostSourcemaps {
   private compiler: Webpack.Compiler | null = null;
 
   constructor(options: Partial<OptionsInterface> = {}) {
+    this.log('Running ByteboostSourcemaps constructor');
+
     if (!options.token) {
       throw new Error('[Byteboost] token is required');
     }
