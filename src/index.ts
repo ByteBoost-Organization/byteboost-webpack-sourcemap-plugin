@@ -1,7 +1,7 @@
-import { UploadSourceMapsHandler } from '@byteboost/cli';
 import { readFileSync } from 'fs';
 import path from 'path';
 import type Webpack from 'webpack';
+import { UploadSourceMapsHandler } from '@byteboost/cli';
 
 export interface OptionsInterface {
   organization: string;
