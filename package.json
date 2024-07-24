@@ -1,6 +1,6 @@
 {
   "name": "@byteboost/webpack-plugin",
-  "version": "0.0.9-dev.11",
+  "version": "0.0.9-dev.12",
   "description": "",
   "type": "module",
   "module": "./dist/index.js",
