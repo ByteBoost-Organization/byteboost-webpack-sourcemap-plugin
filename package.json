@@ -34,10 +34,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^26.0.1",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^20.12.7",
     "del-cli": "^5.1.0",
     "prettier": "^3.2.5",
@@ -47,7 +43,7 @@
     "webpack": "^5.91.0"
   },
   "dependencies": {
-    "@byteboost/cli": "1.0.1-dev.19",
+    "@byteboost/cli": "^1.0.1",
     "mime": "^4.0.1",
     "nanoid": "^5.0.7"
   }
